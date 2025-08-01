@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>แบบทดสอบวิทยาศาสตร์ ม.1 ห้องพิเศษ</title>
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background: #f0f8ff;
+      padding: 0;
+      margin: 0;
+    }
+    header, footer {
+      background: #0055a5;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+    .question-box {
+      background: #ffffff;
+      border-left: 10px solid orange;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .choices button {
+      display: block;
+      width: 100%;
+      margin: 5px 0;
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #0055a5;
+      background: #fff;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .choices button.correct {
+      background-color: #b6fcb6;
+      border-color: green;
+    }
+    .choices button.wrong {
+      background-color: #ffc2c2;
+      border-color: red;
+    }
+    #score-board {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .hidden { display: none; }
+    .btn {
+      background: orange;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    .start-screen {
+      text-align: center;
+      margin-top: 50px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 80%;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>แบบทดสอบวิทยาศาสตร์ ม.1 ห้องพิเศษ</h1>
+  <div>Kru Pai Classroom</div>
+</header>
+
+<div class="container">
+  <div class="start-screen" id="start-screen">
+    <h2>กรอกชื่อเพื่อเริ่มเกม</h2>
+    <input type="text" id="nameInput" placeholder="ชื่อของคุณ" />
+    <br />
+    <button class="btn" onclick="startQuiz()">เริ่มทำแบบทดสอบ</button>
+  </div>
+
+  <div id="quiz-container" class="hidden">
+    <div id="question-box" class="question-box"></div>
+  </div>
+
+  <div id="result-screen" class="hidden">
+    <div id="score-board"></div>
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn" onclick="location.reload()">ย้อนกลับหน้าแรก</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Kru Pai Classroom
+</footer>
+
+<script>
+const questions = [{"question": "หน่วยที่เล็กที่สุดของสิ่งมีชีวิตคืออะไร?", "choices": ["อวัยวะ", "เซลล์", "เนื้อเยื่อ", "ระบบต่าง ๆ"], "correct": 1}, {"question": "อวัยวะใดในร่างกายมนุษย์ที่ทำหน้าที่ย่อยโปรตีน?", "choices": ["ลำไส้ใหญ่", "ลำไส้เล็ก", "กระเพาะอาหาร", "ตับ"], "correct": 2}, {"question": "ข้อใดกล่าวถึงหน้าที่ของเม็ดเลือดแดงได้ถูกต้อง?", "choices": ["ช่วยในการแข็งตัวของเลือด", "สร้างภูมิคุ้มกัน", "ลำเลียงออกซิเจน", "ย่อยอาหาร"], "correct": 2}, {"question": "แหล่งพลังงานหลักที่ใช้ในกระบวนการสังเคราะห์ด้วยแสงคืออะไร?", "choices": ["พลังงานเสียง", "พลังงานความร้อน", "พลังงานกล", "พลังงานแสง"], "correct": 3}, {"question": "ข้อใดเป็นตัวนำไฟฟ้า?", "choices": ["พลาสติก", "ยาง", "ทองแดง", "ไม้แห้ง"], "correct": 2}, {"question": "ข้อใดไม่ใช่สมบัติของสาร?", "choices": ["สี", "กลิ่น", "รส", "เสียง"], "correct": 3}, {"question": "สารชนิดใดต่อไปนี้ละลายน้ำได้ดี?", "choices": ["น้ำมัน", "ทราย", "เกลือ", "แป้ง"], "correct": 2}, {"question": "แรงแม่เหล็กสามารถดูดวัตถุที่ทำจากอะไร?", "choices": ["พลาสติก", "ไม้", "เหล็ก", "แก้ว"], "correct": 2}, {"question": "ข้อใดเป็นแหล่งพลังงานทดแทน?", "choices": ["ถ่านหิน", "น้ำมัน", "พลังงานแสงอาทิตย์", "ก๊าซธรรมชาติ"], "correct": 2}, {"question": "กระบวนการเปลี่ยนสถานะของน้ำจากของเหลวเป็นไอเรียกว่าอะไร?", "choices": ["กลั่นตัว", "ควบแน่น", "ระเหย", "หลอมเหลว"], "correct": 2}, {"question": "เสียงเดินทางได้ดีในตัวกลางใด?", "choices": ["สูญญากาศ", "อากาศ", "น้ำ", "โลหะ"], "correct": 3}, {"question": "พืชได้รับแร่ธาตุจากที่ใด?", "choices": ["แสงแดด", "น้ำฝน", "ดิน", "ใบ"], "correct": 2}, {"question": "กล้องจุลทรรศน์ใช้ในการสังเกตสิ่งใด?", "choices": ["ดวงจันทร์", "ดาวเคราะห์", "เซลล์", "ภูเขา"], "correct": 2}, {"question": "น้ำหนักของวัตถุเกิดจากอะไร?", "choices": ["แรงโน้มถ่วงของโลก", "ปริมาตร", "แรงลอยตัว", "ความเร็วของวัตถุ"], "correct": 0}, {"question": "ข้อใดกล่าวถึงลักษณะของสารละลายได้ถูกต้อง?", "choices": ["มีตะกอนตกค้าง", "แยกชั้นกันชัดเจน", "เป็นเนื้อเดียวกัน", "แยกด้วยมือได้"], "correct": 2}, {"question": "การที่พืชหันใบไปทางแสงแดดเป็นการตอบสนองต่ออะไร?", "choices": ["น้ำ", "ดิน", "แสง", "อุณหภูมิ"], "correct": 2}, {"question": "ปอดทำหน้าที่ใดในระบบหายใจ?", "choices": ["สูบฉีดเลือด", "ย่อยอาหาร", "แลกเปลี่ยนแก๊ส", "ขับของเสีย"], "correct": 2}, {"question": "รากของพืชมีหน้าที่หลักใด?", "choices": ["สังเคราะห์แสง", "ยึดลำต้นและดูดน้ำ", "ขยายพันธุ์", "ป้องกันโรค"], "correct": 1}, {"question": "ดาวเคราะห์ดวงใดอยู่ใกล้ดวงอาทิตย์ที่สุด?", "choices": ["โลก", "ดาวอังคาร", "ดาวพุธ", "ดาวศุกร์"], "correct": 2}, {"question": "น้ำเปลี่ยนสถานะเป็นน้ำแข็ง เรียกว่าอะไร?", "choices": ["หลอมเหลว", "ควบแน่น", "กลั่นตัว", "แข็งตัว"], "correct": 3}, {"question": "สายตาสั้นควรใช้เลนส์ชนิดใด?", "choices": ["เลนส์นูน", "เลนส์เว้า", "เลนส์รวมแสง", "เลนส์โปร่ง"], "correct": 1}, {"question": "ระบบขับถ่ายของเสียทางปัสสาวะประกอบด้วยอวัยวะใด?", "choices": ["ตับและลำไส้", "กระเพาะปัสสาวะและไต", "ลำไส้และกระเพาะอาหาร", "หัวใจและปอด"], "correct": 1}, {"question": "ข้อใดคือพฤติกรรมสืบพันธุ์ของสัตว์?", "choices": ["การกินอาหาร", "การอาบแดด", "การร้องเรียก", "การหายใจ"], "correct": 2}, {"question": "ข้อใดเป็นประโยชน์ของแรงเสียดทาน?", "choices": ["ทำให้ลื่น", "ลดความเร็ว", "หยุดวัตถุได้", "ลดพลังงาน"], "correct": 2}, {"question": "ดินที่เหมาะแก่การเพาะปลูกคือดินชนิดใด?", "choices": ["ดินเหนียว", "ดินร่วน", "ดินทราย", "ดินเค็ม"], "correct": 1}, {"question": "สิ่งมีชีวิตใดจัดเป็นผู้ผลิตในห่วงโซ่อาหาร?", "choices": ["ไก่", "ปลา", "พืช", "แมว"], "correct": 2}, {"question": "การเกิดรุ้งกินน้ำเป็นผลจากปรากฏการณ์ใด?", "choices": ["การหักเหและการสะท้อนแสง", "การระเหย", "การควบแน่น", "การดูดกลืนแสง"], "correct": 0}, {"question": "สิ่งแวดล้อมข้อใดเป็นปัจจัยทางชีวภาพ?", "choices": ["แสงแดด", "พืช", "น้ำ", "อากาศ"], "correct": 1}, {"question": "สสารมีกี่สถานะพื้นฐาน?", "choices": ["2", "3", "4", "5"], "correct": 1}, {"question": "ตาเรามองเห็นวัตถุเพราะเหตุใด?", "choices": ["แสงสะท้อนจากวัตถุ", "แสงส่งออกจากตา", "วัตถุเปล่งแสง", "ไม่มีแสง"], "correct": 0}];
+let current = 0;
+let score = 0;
+
+function startQuiz() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (name === '') {
+    alert("กรุณากรอกชื่อก่อนเริ่มเกม");
+    return;
+  }
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('quiz-container').classList.remove('hidden');
+  showQuestion();
+}
+
+function showQuestion() {
+  if (current >= questions.length) {
+    showResult();
+    return;
+  }
+  const q = questions[current];
+  const container = document.getElementById('question-box');
+  container.innerHTML = '<h3>ข้อ ' + (current + 1) + ': ' + q.question + '</h3>';
+  const choiceDiv = document.createElement('div');
+  choiceDiv.className = "choices";
+  q.choices.forEach((text, idx) => {
+    const btn = document.createElement('button');
+    btn.textContent = text;
+    btn.onclick = () => handleAnswer(btn, idx, q.correct);
+    choiceDiv.appendChild(btn);
+  });
+  container.appendChild(choiceDiv);
+}
+
+function handleAnswer(button, idx, correctIdx) {
+  const buttons = button.parentElement.querySelectorAll("button");
+  buttons.forEach(b => b.disabled = true);
+  if (idx === correctIdx) {
+    button.classList.add("correct");
+    score++;
+  } else {
+    button.classList.add("wrong");
+    buttons[correctIdx].classList.add("correct");
+  }
+  setTimeout(() => {
+    current++;
+    showQuestion();
+  }, 800);
+}
+
+function showResult() {
+  document.getElementById('quiz-container').classList.add('hidden');
+  document.getElementById('result-screen').classList.remove('hidden');
+  document.getElementById('score-board').textContent = 'คุณได้คะแนน ' + score + ' จาก ' + questions.length + ' คะแนน';
+}
+</script>
+
+</body>
+</html>
